@@ -21,8 +21,10 @@ namespace SmartGlass.Cli
         [PositionalArgument(ArgumentFlags.Optional, Position = 1)]
         public string TokenFilePath { get; set; }
 
-        public override async Task<CommandResult> ExecuteAsync(CancellationToken cancel)
+
+        public async Task<CommandResult> ExecuteAsync(CancellationToken cancel, Action sessionHandler)
         {
+        
             if (TokenFilePath != null)
             {
                 using (FileStream fs = File.Open(TokenFilePath, FileMode.Open))
@@ -42,8 +44,7 @@ namespace SmartGlass.Cli
                             AuthService == null ? null : AuthService.XToken.UserInformation.Userhash,
                             AuthService == null ? null : AuthService.XToken.Jwt))
                 {
-                    var loop = new Loop(typeof(SessionCommandType));
-                    loop.Execute();
+                    sessionHandler();
 
                     Console.WriteLine($"Disconnected");
                 }
@@ -60,6 +61,13 @@ namespace SmartGlass.Cli
             }
 
             return CommandResult.RuntimeFailure;
+        }
+        
+        public override Task<CommandResult> ExecuteAsync(CancellationToken cancel)
+        {
+            var loop = new Loop(typeof(SessionCommandType));
+
+            return ExecuteAsync(cancel, loop.Execute);
         }
     }
 }

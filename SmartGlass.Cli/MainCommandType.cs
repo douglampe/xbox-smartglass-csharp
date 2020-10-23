@@ -37,6 +37,11 @@ namespace SmartGlass.Cli
         [Command(
             typeof(PowerOnCommand),
             Description = "Power on Xbox One console.")]
-        PowerOn
+        PowerOn,
+
+        [Command(
+            typeof(PowerOffCommand),
+            Description = "Power off Xbox One console.")]
+        PowerOff
     }
 }

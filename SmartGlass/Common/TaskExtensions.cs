@@ -42,7 +42,7 @@ namespace SmartGlass.Common
                 await Task.Run(async () => await postAddAction());
             }
 
-            Task.Delay(timeout, timeoutCancellation.Token).ContinueWith(t =>
+            await Task.Delay(timeout, timeoutCancellation.Token).ContinueWith(t =>
             {
                 if (timeoutCancellation.IsCancellationRequested)
                 {
